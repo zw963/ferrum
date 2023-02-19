@@ -11,12 +11,12 @@ module Ferrum
         @start ||= monotonic_time
       end
 
-      def elapsed_time(start = nil)
+      def elapsed_time(start=nil)
         monotonic_time - (start || @start)
       end
 
       def monotonic_time
-        Concurrent.monotonic_time
+        Process.clock_gettime(Process::CLOCK_MONOTONIC)
       end
 
       def timeout?(start, timeout)

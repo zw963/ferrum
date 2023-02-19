@@ -53,7 +53,7 @@ module Ferrum
 
         if screenshots
           included = trace_config.fetch(:includedCategories, [])
-          trace_config.merge!(includedCategories: included | SCREENSHOT_CATEGORIES)
+          trace_config[:includedCategories] = included | SCREENSHOT_CATEGORIES
         end
 
         subscribe_tracing_complete
@@ -82,7 +82,7 @@ module Ferrum
           next if index.to_i != 0
 
           @pending.set(stream_handle(event["stream"]))
-        rescue StandardError => e
+        rescue => e
           @pending.fail(e)
         end
 

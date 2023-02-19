@@ -665,7 +665,7 @@ describe Ferrum::Node do
 
       it "clears the input" do
         keys = Ferrum::Utils::Platform.mac? ? %i[Alt Shift Left] : %i[Ctrl Shift Left]
-        change_me.type(2.times.map { keys }, :backspace)
+        change_me.type(Array.new(2) { keys }, :backspace)
 
         expect(change_me.value).to eq("")
       end

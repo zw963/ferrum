@@ -141,7 +141,7 @@ module Ferrum
     def mouse_event(type:, button: :left, count: 1, modifiers: nil, wait: 0)
       button = validate_button(button)
       options = { x: @x, y: @y, type: type, button: button, clickCount: count }
-      options.merge!(modifiers: modifiers) if modifiers
+      options[:modifiers] = modifiers if modifiers
       @page.command("Input.dispatchMouseEvent", wait: wait, slowmoable: true, **options)
     end
 

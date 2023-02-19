@@ -178,22 +178,22 @@ module Ferrum
           end
 
           dimension = PAPER_FORMATS.fetch(format)
-          options.merge!(paper_width: dimension[:width],
-                         paper_height: dimension[:height])
+          options[:paper_width] = dimension[:width]
+          options[:paper_height] = dimension[:height]
         end
 
         options.transform_keys { |k| to_camel_case(k) }
       end
 
-      def screenshot_options(path = nil, format: nil, scale: 1.0, **options)
+      def screenshot_options(path=nil, format: nil, scale: 1.0, **options)
         screenshot_options = {}
 
         format, quality = format_options(format, path, options[:quality])
-        screenshot_options.merge!(quality: quality) if quality
-        screenshot_options.merge!(format: format)
+        screenshot_options[:quality] = quality if quality
+        screenshot_options[:format] = format
 
         clip = area_options(options[:full], options[:selector], scale)
-        screenshot_options.merge!(clip: clip) if clip
+        screenshot_options[:clip] = clip if clip
 
         screenshot_options
       end
@@ -201,7 +201,7 @@ module Ferrum
       def format_options(format, path, quality)
         format ||= path ? File.extname(path).delete(".") : "png"
         format = "jpeg" if format == "jpg"
-        raise "Not supported options `:format` #{format}. jpeg | png" if format !~ /jpeg|png/i
+        raise "Not supported options `:format` #{format}. jpeg | png" if !/jpeg|png/i.match?(format)
 
         quality ||= 75 if format == "jpeg"
 
@@ -225,7 +225,7 @@ module Ferrum
             clip = { x: 0, y: 0, width: width, height: height }
           end
 
-          clip.merge!(scale: scale)
+          clip[:scale] = scale
         end
 
         clip

@@ -214,7 +214,7 @@ module Ferrum
     def computed_style
       page
         .command("CSS.getComputedStyleForNode", nodeId: node_id)["computedStyle"]
-        .each_with_object({}) { |style, memo| memo.merge!(style["name"] => style["value"]) }
+        .each_with_object({}) { |style, memo| memo[style["name"]] = style["value"] }
     end
 
     private

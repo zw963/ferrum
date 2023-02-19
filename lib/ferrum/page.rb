@@ -112,14 +112,14 @@ module Ferrum
     #
     def go_to(url = nil)
       options = { url: combine_url!(url) }
-      options.merge!(referrer: referrer) if referrer
+      options[:referrer] = referrer if referrer
       response = command("Page.navigate", wait: GOTO_WAIT, **options)
       raise StatusError.new(options[:url], "Request to #{options[:url]} failed (#{response['errorText']})") if response['errorText']
 
       response["frameId"]
     rescue TimeoutError
       if @browser.options.pending_connection_errors
-        pendings = network.traffic.select(&:pending?).map(&:url).compact
+        pendings = network.traffic.select(&:pending?).filter_map(&:url)
         raise PendingConnectionsError.new(options[:url], pendings) unless pendings.empty?
       end
     end

@@ -35,7 +35,7 @@ module Ferrum
         authenticator = WEBrick::HTTPAuth::ProxyBasicAuth.new(Realm: "Proxy Realm",
                                                               UserDB: htpasswd,
                                                               Logger: Logger.new(IO::NULL))
-        options.merge!(ProxyAuthProc: authenticator.method(:authenticate).to_proc)
+        options[:ProxyAuthProc] = authenticator.method(:authenticate).to_proc
       end
 
       @server = HTTPProxyServer.new(**options)

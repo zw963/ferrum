@@ -122,7 +122,7 @@ describe Ferrum::Headers do
 
     it "keeps temporary headers local to the current window" do
       browser.create_page
-      browser.headers.add("X-Custom-Header" => "1", permanent: false)
+      browser.headers.add("X-Custom-Header" => "1", :permanent => false)
 
       browser.switch_to_window browser.windows.last
       browser.go_to("/ferrum/headers")
@@ -135,7 +135,7 @@ describe Ferrum::Headers do
 
     it "does not mix temporary headers with permanent ones when propagating to other windows" do
       browser.create_page
-      browser.headers.add("X-Custom-Header" => "1", permanent: false)
+      browser.headers.add("X-Custom-Header" => "1", :permanent => false)
       browser.headers.add("Host" => "foo.com")
 
       browser.switch_to_window browser.windows.last
@@ -151,7 +151,7 @@ describe Ferrum::Headers do
 
     it "does not propagate temporary headers to new windows" do
       browser.go_to
-      browser.headers.add("X-Custom-Header" => "1", permanent: false)
+      browser.headers.add("X-Custom-Header" => "1", :permanent => false)
       browser.create_page
 
       browser.switch_to_window browser.windows.last

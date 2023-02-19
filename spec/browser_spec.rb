@@ -416,7 +416,7 @@ describe Ferrum::Browser do
       # browser is fully alive.
       begin
         popup2.execute("window.close()")
-      rescue StandardError
+      rescue
         Ferrum::DeadBrowserError
       end
 

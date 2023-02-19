@@ -221,11 +221,11 @@ describe Ferrum::Network do
     it "gets cleared along with network traffic" do
       network.blacklist = /unwanted/
       page.go_to("/ferrum/url_blacklist")
-      expect(traffic.select(&:blocked?).length).to eq(3)
+      expect(traffic.count(&:blocked?)).to eq(3)
 
       network.clear(:traffic)
 
-      expect(traffic.select(&:blocked?).length).to eq(0)
+      expect(traffic.count(&:blocked?)).to eq(0)
     end
 
     it "supports multiple pages each with their own blacklist" do

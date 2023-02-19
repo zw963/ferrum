@@ -5,8 +5,8 @@ require "sinatra/base"
 module Ferrum
   class Application < Sinatra::Base
     configure { set :protection, except: :frame_options }
-    FERRUM_VIEWS  = "#{File.dirname(__FILE__)}/views"
-    FERRUM_PUBLIC = "#{File.dirname(__FILE__)}/public"
+    FERRUM_VIEWS  = "#{File.dirname(__FILE__)}/views".freeze
+    FERRUM_PUBLIC = "#{File.dirname(__FILE__)}/public".freeze
 
     class TestAppError < Exception; end # rubocop:disable Lint/InheritException
 
@@ -54,7 +54,7 @@ module Ferrum
     end
 
     get "/referer_base" do
-      <<~HERE.gsub(/\n/, "")
+      <<~HERE.delete("\n")
         <a href="/get_referer">direct link</a>
         <a href="/redirect_to_get_referer">link via redirect</a>
         <form action="/get_referer" method="get"><input type="submit"></form>
@@ -209,7 +209,7 @@ module Ferrum
       buffer << "Content-type: #{params.dig(:form, :document, :type)}"
       buffer << "File content: #{params.dig(:form, :document, :tempfile).read}"
       buffer.join(" | ")
-    rescue StandardError
+    rescue
       "No file uploaded"
     end
 
@@ -221,7 +221,7 @@ module Ferrum
         buffer << "File content: #{doc[:tempfile].read}"
       end
       buffer.join(" | ")
-    rescue StandardError
+    rescue
       "No files uploaded"
     end
 

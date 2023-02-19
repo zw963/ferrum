@@ -164,8 +164,8 @@ module Ferrum
 
                if proxy
                  options.parse_proxy(proxy)
-                 params.merge!(proxyServer: "#{proxy[:host]}:#{proxy[:port]}")
-                 params.merge!(proxyBypassList: proxy[:bypass]) if proxy[:bypass]
+                 params[:proxyServer] = "#{proxy[:host]}:#{proxy[:port]}"
+                 params[:proxyBypassList] = proxy[:bypass] if proxy[:bypass]
                end
 
                context = contexts.create(**params)

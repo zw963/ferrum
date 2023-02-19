@@ -107,7 +107,7 @@ module Ferrum
       # @return [String, nil]
       #
       def content_type
-        @content_type ||= headers.find { |k, _| k.downcase == "content-type" }&.last&.sub(/;.*\z/, "")
+        @content_type ||= headers.find { |k, _| k.casecmp("content-type").zero? }&.last&.sub(/;.*\z/, "")
       end
 
       # See https://crbug.com/883475

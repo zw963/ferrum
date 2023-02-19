@@ -47,7 +47,7 @@ module Ferrum
       # @return [Boolean]
       #
       def type?(value)
-        type.downcase == value.to_s.downcase
+        type.casecmp(value.to_s).zero?
       end
 
       #

@@ -66,8 +66,8 @@ module Ferrum
                               "user-data-dir" => user_data_dir)
 
           if options.proxy
-            flags.merge!("proxy-server" => "#{options.proxy[:host]}:#{options.proxy[:port]}")
-            flags.merge!("proxy-bypass-list" => options.proxy[:bypass]) if options.proxy[:bypass]
+            flags["proxy-server"] = "#{options.proxy[:host]}:#{options.proxy[:port]}"
+            flags["proxy-bypass-list"] = options.proxy[:bypass] if options.proxy[:bypass]
           end
 
           flags

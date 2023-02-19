@@ -29,7 +29,7 @@ module Ferrum
     def accept(prompt_text = nil)
       options = { accept: true }
       response = prompt_text || default_prompt
-      options.merge!(promptText: response) if response
+      options[:promptText] = response if response
       @page.command("Page.handleJavaScriptDialog", slowmoable: true, **options)
     end
 

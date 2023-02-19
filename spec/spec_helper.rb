@@ -29,12 +29,12 @@ RSpec.configure do |config|
   config.before(:all) do
     base_url = Ferrum::Server.server.base_url
     options = { base_url: base_url }
-    options.merge!(headless: false) if ENV["HEADLESS"] == "false"
-    options.merge!(slowmo: ENV["SLOWMO"].to_f) if ENV["SLOWMO"].to_f > 0
+    options[:headless] = false if ENV["HEADLESS"] == "false"
+    options[:slowmo] = ENV["SLOWMO"].to_f if ENV["SLOWMO"].to_f > 0
 
     if ENV["CI"]
       ferrum_logger = StringIO.new
-      options.merge!(logger: ferrum_logger)
+      options[:logger] = ferrum_logger
     end
 
     @browser = Ferrum::Browser.new(**options)
@@ -73,14 +73,14 @@ RSpec.configure do |config|
     screenshot_name = "screenshot-#{filename}-#{line_number}-#{timestamp}.png"
     screenshot_path = "/tmp/ferrum/#{screenshot_name}"
     browser.screenshot(path: screenshot_path, full: true)
-  rescue StandardError => e
+  rescue => e
     puts "#{e.class}: #{e.message}"
   end
 
   def save_exception_log(_browser, filename, line_number, timestamp, ferrum_logger)
     log_name = "logfile-#{filename}-#{line_number}-#{timestamp}.txt"
     File.binwrite("/tmp/ferrum/#{log_name}", ferrum_logger.string)
-  rescue StandardError => e
+  rescue => e
     puts "#{e.class}: #{e.message}"
   end
 end

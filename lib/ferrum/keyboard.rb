@@ -88,7 +88,7 @@ module Ferrum
     # @return [Integer]
     #
     def modifiers(keys)
-      keys.map { |k| MODIFIERS[k.to_s] }.compact.reduce(0, :|)
+      keys.filter_map { |k| MODIFIERS[k.to_s] }.reduce(0, :|)
     end
 
     private
@@ -110,7 +110,7 @@ module Ferrum
       when Symbol
         key = keys.to_s.downcase
 
-        if MODIFIERS.keys.include?(key)
+        if MODIFIERS.key?(key)
           pressed_keys.last.push(key)
           nil
         else

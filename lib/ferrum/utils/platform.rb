@@ -17,7 +17,7 @@ module Ferrum
       end
 
       def mac?
-        RbConfig::CONFIG["host_os"] =~ /darwin/
+        RbConfig::CONFIG["host_os"].include?('darwin')
       end
 
       def mri?

@@ -53,7 +53,7 @@ module Ferrum
         proc {
           begin
             FileUtils.remove_entry(path)
-          rescue StandardError
+          rescue
             Errno::ENOENT
           end
         }
