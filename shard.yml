@@ -1,8 +1,8 @@
 name: ferrum
-version: 0.1.0
+version: 0.13.0
 
 authors:
-  - Billy.Zheng <vil963@gmail.com>
+  - Dmitry Vorotilin <d.vorotilin@gmail.com>
 
 crystal: 1.7.2
 
