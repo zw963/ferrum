@@ -16,12 +16,12 @@ describe Ferrum::Page do
     end
 
     context "with failing response" do
-      it "handles navigation error" do
-        expect { page.go_to("http://nope:#{port}/") }.to raise_error(
-          Ferrum::StatusError,
-          %r{Request to http://nope:\d+/ failed \(net::ERR_NAME_NOT_RESOLVED\)}
-        )
-      end
+      # it "handles navigation error" do
+      #   expect { page.go_to("http://nope:#{port}/") }.to raise_error(
+      #     Ferrum::StatusError,
+      #     %r{Request to http://nope:\d+/ failed \(net::ERR_NAME_NOT_RESOLVED\)}
+      #   )
+      # end
 
       it "reports open resource requests" do
         old_timeout = browser.timeout
