@@ -114,7 +114,7 @@ module Ferrum
       options = { url: combine_url!(url) }
       options[:referrer] = referrer if referrer
       response = command("Page.navigate", wait: GOTO_WAIT, **options)
-      raise StatusError.new(options[:url], "Request to #{options[:url]} failed (#{response['errorText']})") if response['errorText']
+      raise StatusError.new(options[:url], "Request to #{options[:url]} failed (#{response['errorText']})") if response["errorText"]
 
       response["frameId"]
     rescue TimeoutError

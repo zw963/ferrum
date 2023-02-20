@@ -19,7 +19,7 @@ module Ferrum
       end
 
       def stream_to_memory(encoding:, handle:)
-        data = +'' # Mutable string has << and compatible to File
+        data = +"" # Mutable string has << and compatible to File
         stream(output: data, handle: handle)
         encoding == :base64 ? Base64.encode64(data) : data
       end
