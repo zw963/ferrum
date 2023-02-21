@@ -1,36 +1,34 @@
-# frozen_string_literal: true
-
-require "forwardable"
-require "ferrum/page"
-require "ferrum/proxy"
-require "ferrum/contexts"
-require "ferrum/browser/xvfb"
-require "ferrum/browser/options"
-require "ferrum/browser/process"
-require "ferrum/browser/client"
-require "ferrum/browser/binary"
-require "ferrum/browser/version_info"
+require "./page"
+require "./proxy"
+require "./contexts"
+require "./browser/xvfb"
+require "./browser/options"
+require "./browser/process"
+require "./browser/client"
+require "./browser/binary"
+require "./browser/version_info"
 
 module Ferrum
   class Browser
-    extend Forwardable
-    delegate %i[default_context] => :contexts
-    delegate %i[targets create_target page pages windows] => :default_context
-    delegate %i[go_to goto go back forward refresh reload stop wait_for_reload
-                at_css at_xpath css xpath current_url current_title url title
-                body doctype content=
-                headers cookies network
-                mouse keyboard
-                screenshot pdf mhtml viewport_size
-                frames frame_by main_frame
-                evaluate evaluate_on evaluate_async execute evaluate_func
-                add_script_tag add_style_tag bypass_csp
-                on position position=
-                playback_rate playback_rate=] => :page
-    delegate %i[default_user_agent] => :process
+    {% begin %}
+      delegate {{*%i[default_context]}}, to: @contexts
+      delegate {{*%i[targets create_target page pages windows]}}, to: @default_context
+      delegate {{*%i[go_to goto go back forward refresh reload stop wait_for_reload
+                   at_css at_xpath css xpath current_url current_title url title
+                   body doctype content=
+                   headers cookies network
+                   mouse keyboard
+                   screenshot pdf mhtml viewport_size
+                   frames frame_by main_frame
+                   evaluate evaluate_on evaluate_async execute evaluate_func
+                   add_script_tag add_style_tag bypass_csp
+                   on position position=
+                   playback_rate playback_rate=]}}, to: @page
+      delegate {{*%i[default_user_agent]}}, to: @process
+    {% end %}
 
-    attr_reader :client, :process, :contexts, :options, :window_size, :base_url
-    attr_accessor :timeout
+    getter client : Client, process : Process, :contexts, :options, :window_size, :base_url
+    property :timeout
 
     #
     # Initializes the browser.
@@ -119,9 +117,11 @@ module Ferrum
     # @option options [Hash] :env
     #   Environment variables you'd like to pass through to the process.
     #
-    def initialize(options = nil)
+    def initialize(options : Hash(Symbol, Object)? = nil)
       @options = Options.new(options)
-      @client = @process = @contexts = nil
+      @client = nil
+      @process = nil
+      @contexts = nil
 
       @timeout = @options.timeout
       @window_size = @options.window_size
@@ -157,9 +157,9 @@ module Ferrum
     # @return [Ferrum::Page]
     #   Created page.
     #
-    def create_page(new_context: false, proxy: nil)
+    def create_page(new_context = false, proxy = nil)
       page = if new_context || proxy
-               params = {}
+               params = {} of Symbol => String
 
                if proxy
                  options.parse_proxy(proxy)
@@ -182,7 +182,7 @@ module Ferrum
     end
 
     def extensions
-      @extensions ||= Array(options.extensions).map do |ext|
+      @extensions ||= options.extensions.map do |ext|
         (ext.is_a?(Hash) && ext[:source]) || File.read(ext)
       end
     end
@@ -194,7 +194,7 @@ module Ferrum
     #   The JavaScript to add to each new document.
     #
     # @example
-    #   browser.evaluate_on_new_document <<~JS
+    #   browser.evaluate_on_new_document <<-JS
     #     Object.defineProperty(navigator, "languages", {
     #       get: function() { return ["tlh"]; }
     #     });
@@ -261,14 +261,12 @@ module Ferrum
       VersionInfo.new(command("Browser.getVersion"))
     end
 
-    private
-
-    def start
+    private def start
       Utils::ElapsedTime.start
       @process = Process.start(options)
       @client = Client.new(@process.ws_url, self,
-                           logger: options.logger,
-                           ws_max_receive_size: options.ws_max_receive_size)
+        logger: options.logger,
+        ws_max_receive_size: options.ws_max_receive_size)
       @contexts = Contexts.new(self)
     end
   end

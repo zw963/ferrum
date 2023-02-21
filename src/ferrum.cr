@@ -1,6 +1,14 @@
-# TODO: Write documentation for `Ferrum`
-module Ferrum
-  VERSION = "0.1.0"
+class BlackHole
+  macro method_missing(call)
+    raise "BUG: must implement {{call.name}}"
+  end
+end
 
-  # TODO: Put your code here
+require "./ferrum/utils/platform"
+require "./ferrum/utils/attempt"
+require "./ferrum/errors"
+require "./ferrum/browser"
+require "./ferrum/node"
+
+module Ferrum
 end
