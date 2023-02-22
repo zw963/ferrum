@@ -45,7 +45,7 @@ module Ferrum
     end
 
     def state=(value)
-      raise ArgumentError unless STATE_VALUES.includes?(value)
+      raise ArgumentError.new unless STATE_VALUES.includes?(value)
 
       @state = value
     end
@@ -130,7 +130,7 @@ module Ferrum
     #
     def execution_id!
       value = @execution_id.borrow(@page.timeout, &.itself)
-      raise NoExecutionContextError if value.instance_of?(Object)
+      raise NoExecutionContextError.new if value.instance_of?(Object)
 
       value
     end

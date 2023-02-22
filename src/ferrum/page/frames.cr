@@ -59,7 +59,7 @@ module Ferrum
         elsif execution_id
           frames.find { |f| f.execution_id == execution_id }
         else
-          raise ArgumentError
+          raise ArgumentError.new
         end
       end
 

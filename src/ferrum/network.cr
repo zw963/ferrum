@@ -63,7 +63,7 @@ module Ferrum
       start = Utils::ElapsedTime.monotonic_time
 
       until idle?(connections)
-        raise TimeoutError if Utils::ElapsedTime.timeout?(start, timeout)
+        raise TimeoutError.new if Utils::ElapsedTime.timeout?(start, timeout)
 
         sleep(duration)
       end
@@ -153,7 +153,7 @@ module Ferrum
     end
 
     def blacklist=(patterns)
-      @blacklist = patterns
+      @blacklist = Array.wrap(patterns)
       blacklist_subscribe
     end
 
@@ -162,7 +162,7 @@ module Ferrum
     end
 
     def whitelist=(patterns)
-      @whitelist = patterns
+      @whitelist = Array.wrap(patterns)
       whitelist_subscribe
     end
 
@@ -464,11 +464,11 @@ module Ferrum
     end
 
     private def blacklist?
-      @blacklist.any?
+      Array.wrap(@blacklist).any?
     end
 
     private def whitelist?
-      @whitelist.any?
+      Array.wrap(@whitelist).any?
     end
   end
 end

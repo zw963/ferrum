@@ -2,18 +2,26 @@ module Ferrum
   class Browser
     class Options
       class Base
-        # include Singleton
-
         def self.options
-          instance
+          if (instance = @@instance)
+            instance
+          else
+            @@instance = new
+          end
         end
+
+        @@platform_path = {
+          mac:     [] of String,
+          windows: [] of String,
+          linux:   [] of String,
+        }
 
         def to_h
           @@default_options
         end
 
         def except(*keys)
-          to_h.except(*keys)
+          to_h.reject(*keys)
         end
 
         def detect_path
@@ -21,11 +29,11 @@ module Ferrum
         end
 
         def merge_required(flags, options, user_data_dir)
-          raise NotImplementedError
+          raise NotImplementedError.new
         end
 
         def merge_default(flags, options)
-          raise NotImplementedError
+          raise NotImplementedError.new
         end
       end
     end

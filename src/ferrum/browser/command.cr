@@ -21,12 +21,14 @@ module Ferrum
       end
 
       getter :defaults, :path, :options
+      @defaults : Options::Base
+      @options : Options
+      @user_data_dir : String?
+      @path : String?
+      @flags : Hash(String, String?)
 
-      def initialize(defaults, options, user_data_dir)
-        @flags = {} of BlackHole => BlackHole
-        @defaults = defaults
-        @options = options
-        @user_data_dir = user_data_dir
+      def initialize(@defaults, @options, @user_data_dir)
+        @flags = {} of String => String?
         @path = options.browser_path || ENV.fetch("BROWSER_PATH", nil) || defaults.detect_path
         raise BinaryNotFoundError.new NOT_FOUND unless @path
 

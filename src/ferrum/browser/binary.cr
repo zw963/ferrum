@@ -13,22 +13,22 @@ module Ferrum
 
       def enum_method(commands)
         paths, exts = prepare_paths
-        cmds = commands.product(paths, exts)
-        lazy_find(cmds)
+        cmds = Array.wrap(commands).cartesian_product(paths, exts)
+        lazy_find(cmds.each)
       end
 
       def prepare_paths
-        exts = (ENV.key?("PATHEXT") ? ENV.fetch("PATHEXT").split(";") : [] of String) << ""
-        paths = ENV["PATH"].split(File::PATH_SEPARATOR)
-        raise EmptyPathError if paths.empty?
+        exts = (ENV.has_key?("PATHEXT") ? ENV.fetch("PATHEXT").split(";") : [] of String) << ""
+        paths = ENV["PATH"].split(':')
+        raise EmptyPathError.new if paths.empty?
 
         [paths, exts]
       end
 
       # rubocop:disable Style/CollectionCompact
       def lazy_find(cmds)
-        cmds.lazy.map do |cmd, path, ext|
-          absolute_path = File.absolute_path(cmd)
+        cmds.map do |cmd, path, ext|
+          absolute_path = File.expand_path(cmd)
           is_absolute_path = absolute_path == cmd
           cmd = File.expand_path("#{cmd}#{ext}", path) unless is_absolute_path
 

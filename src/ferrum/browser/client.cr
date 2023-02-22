@@ -39,8 +39,8 @@ module Ferrum
         data = pending.value!(@connectable.timeout)
         @pendings.delete(message[:id])
 
-        raise DeadBrowserError if data.nil? && @ws.messages.closed?
-        raise TimeoutError unless data
+        raise DeadBrowserError.new if data.nil? && @ws.messages.closed?
+        raise TimeoutError.new unless data
 
         error, response = data.values_at("error", "result")
         raise_browser_error(error) if error
@@ -85,9 +85,9 @@ module Ferrum
         when "Cannot find context with specified id"
           raise NoExecutionContextError.new error
         when "No target with given id found"
-          raise NoSuchPageError
+          raise NoSuchPageError.new
         when /Could not compute content quads/
-          raise CoordinatesNotFoundError
+          raise CoordinatesNotFoundError.new
         else
           raise BrowserError.new error
         end

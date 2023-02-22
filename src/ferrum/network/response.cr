@@ -1,5 +1,3 @@
-require "base64"
-
 module Ferrum
   class Network
     #
@@ -128,7 +126,7 @@ module Ferrum
         @body ||= begin
           body, encoded = @page.command("Network.getResponseBody", requestId: id)
             .values_at("body", "base64Encoded")
-          encoded ? Base64.decode64(body) : body
+          encoded ? Base64.decode(body) : body
         end
       end
 

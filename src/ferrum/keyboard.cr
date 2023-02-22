@@ -37,7 +37,7 @@ module Ferrum
     # @return [self]
     #
     def down(key)
-      key = normalize_keys(key).first
+      key = normalize_keys(Array.wrap(key)).first
       type = key[:text] ? "keyDown" : "rawKeyDown"
       @page.command("Input.dispatchKeyEvent", slowmoable: true, type: type, params: key)
       self
@@ -52,7 +52,7 @@ module Ferrum
     # @return [self]
     #
     def up(key)
-      key = normalize_keys(key).first
+      key = normalize_keys(Array.wrap(key)).first
       @page.command("Input.dispatchKeyEvent", slowmoable: true, type: "keyUp", params: key)
       self
     end
@@ -67,7 +67,7 @@ module Ferrum
     # @return [self]
     #
     def type(*keys)
-      keys = normalize_keys(keys)
+      keys = normalize_keys(Array.wrap(keys))
 
       keys.each do |key|
         type = key[:text] ? "keyDown" : "rawKeyDown"

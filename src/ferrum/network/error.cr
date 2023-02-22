@@ -11,7 +11,7 @@ module Ferrum
 
       def timestamp=(value)
         @timestamp = value
-        @time = Time.strptime((value / 1000).to_s, "%s")
+        @time = Time.parse_local((value / 1000).to_s, "%s")
       end
     end
   end

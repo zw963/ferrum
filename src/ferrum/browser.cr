@@ -182,7 +182,7 @@ module Ferrum
     end
 
     def extensions
-      @extensions ||= options.extensions.map do |ext|
+      @extensions ||= Array.wrap(options.extensions).map do |ext|
         (ext.is_a?(Hash) && ext[:source]) || File.read(ext)
       end
     end

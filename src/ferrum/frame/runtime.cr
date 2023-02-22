@@ -1,8 +1,8 @@
 module Ferrum
   class CyclicObject
-    def inspect
-      @@instance = new
+    @@instance = new
 
+    def inspect
       %(#<#{self.class} JavaScript object that cannot be represented in Ruby>)
     end
 
@@ -133,7 +133,7 @@ module Ferrum
 
         case result["description"]
         when /\AError: timed out promise/
-          raise ScriptTimeoutError
+          raise ScriptTimeoutError.new
         else
           raise JavaScriptError.new(result, response.dig("exceptionDetails", "stackTrace"))
         end

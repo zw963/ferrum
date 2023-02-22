@@ -85,7 +85,7 @@ module Ferrum
     end
 
     def hover
-      raise NotImplementedError
+      raise NotImplementedError.new
     end
 
     def scroll_into_view
@@ -109,7 +109,7 @@ module Ferrum
     end
 
     def select_file(value)
-      page.command("DOM.setFileInputFiles", slowmoable: true, nodeId: node_id, files: value)
+      page.command("DOM.setFileInputFiles", slowmoable: true, nodeId: node_id, files: Array.wrap(value))
     end
 
     def at_xpath(selector)

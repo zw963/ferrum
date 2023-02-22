@@ -1,7 +1,9 @@
 module Ferrum
   module Utils
     module Attempt
-      def self.with_retry(errors : Array(Exception), max : Int32, wait : Time::Span, &)
+      extend self
+
+      def with_retry(errors : Array(Exception), max : Int32, wait : Time::Span, &)
         attempts = 1
 
         loop do

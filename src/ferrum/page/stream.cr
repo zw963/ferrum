@@ -19,14 +19,14 @@ module Ferrum
       def stream_to_memory(*, encoding, handle)
         data = +"" # Mutable string has << and compatible to File
         stream(output: data, handle: handle)
-        encoding == :base64 ? Base64.encode64(data) : data
+        encoding == :base64 ? Base64.encode(data) : data
       end
 
       def stream(*, output, handle)
         loop do
           result = command("IO.read", handle: handle, size: STREAM_CHUNK)
           chunk = result.fetch("data")
-          chunk = Base64.decode64(chunk) if result["base64Encoded"]
+          chunk = Base64.decode(chunk) if result["base64Encoded"]
           output << chunk
           break if result["eof"]
         end

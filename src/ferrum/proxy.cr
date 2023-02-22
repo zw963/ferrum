@@ -96,7 +96,7 @@ module Ferrum
                 break if /\A(#{CRLF}|#{LF})\z/m =~ line
               end
             else
-              raise WEBrick::HTTPStatus::BadGateway
+              raise WEBrick::HTTPStatus::BadGateway.new
             end
           end
           @logger.debug("CONNECT #{host}:#{port}: succeeded")
@@ -104,10 +104,10 @@ module Ferrum
         rescue ex
           @logger.debug("CONNECT #{host}:#{port}: failed `#{ex.message}'")
           res.set_error(ex)
-          raise WEBrick::HTTPStatus::EOFError
+          raise WEBrick::HTTPStatus::EOFError.new
         ensure
           # At exit os variable sometimes can be nil which results in hanging forever
-          raise WEBrick::HTTPStatus::EOFError unless os
+          raise WEBrick::HTTPStatus::EOFError.new unless os
 
           if handler = @config[:ProxyContentHandler]
             handler.call(req, res)
@@ -137,7 +137,7 @@ module Ferrum
           @logger.debug("CONNECT #{host}:#{port}: closed")
         end
 
-        raise WEBrick::HTTPStatus::EOFError
+        raise WEBrick::HTTPStatus::EOFError.new
       end
       # rubocop:enable all
     end

@@ -1,5 +1,3 @@
-require "base64"
-
 module Ferrum
   class Network
     class InterceptedRequest
@@ -35,7 +33,7 @@ module Ferrum
 
         options = {responseCode: 200}.merge(options)
         options = options.merge(requestId: request_id, responseHeaders: header_array(headers))
-        options = options.merge(body: Base64.strict_encode64(options.fetch(:body, ""))) if has_body
+        options = options.merge(body: Base64.strict_encode(options.fetch(:body, ""))) if has_body
 
         @status = :responded
         @page.command("Fetch.fulfillRequest", **options)
@@ -82,6 +80,7 @@ module Ferrum
 
       private def header_array(values)
         values.map do |key, value|
+          # { name: String(key), value: String(value) }
           {name: key.to_s, value: value.to_s}
         end
       end

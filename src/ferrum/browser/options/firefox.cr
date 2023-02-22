@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Ferrum
   class Browser
     class Options
@@ -8,16 +6,16 @@ module Ferrum
           "headless" => nil,
         }
 
-        MAC_BIN_PATH = {
+        MAC_BIN_PATH = [
           "/Applications/Firefox.app/Contents/MacOS/firefox-bin",
-        }
+        ]
 
-        LINUX_BIN_PATH = {"firefox"}
+        LINUX_BIN_PATH = ["firefox"]
 
-        WINDOWS_BIN_PATH = {
+        WINDOWS_BIN_PATH = [
           "C:/Program Files/Firefox Developer Edition/firefox.exe",
           "C:/Program Files/Mozilla Firefox/firefox.exe",
-        }
+        ]
 
         @@platform_path = {
           mac:     MAC_BIN_PATH,
@@ -33,7 +31,7 @@ module Ferrum
         def merge_default(flags, options)
           defaults = except("headless") unless options.headless
 
-          defaults ||= DEFAULT_OPTIONS
+          defaults ||= @@default_options
           defaults.merge(flags)
         end
       end

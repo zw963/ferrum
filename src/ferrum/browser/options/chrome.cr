@@ -39,20 +39,20 @@ module Ferrum
           # "no-sandbox" => nil,
         }
 
-        MAC_BIN_PATH = {
+        MAC_BIN_PATH = [
           "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
           "/Applications/Chromium.app/Contents/MacOS/Chromium",
-        }
+        ]
 
-        LINUX_BIN_PATH = {
+        LINUX_BIN_PATH = [
           "chrome", "google-chrome", "google-chrome-stable", "google-chrome-beta",
           "chromium", "chromium-browser", "google-chrome-unstable",
-        }
+        ]
 
-        WINDOWS_BIN_PATH = {
+        WINDOWS_BIN_PATH = [
           "C:/Program Files/Google/Chrome/Application/chrome.exe",
           "C:/Program Files/Google/Chrome Dev/Application/chrome.exe",
-        }
+        ]
 
         @@platform_path = {
           mac:     MAC_BIN_PATH,
@@ -67,9 +67,9 @@ module Ferrum
                                "window-size"   => options.window_size.try &.join(","),
                                "user-data-dir" => user_data_dir})
 
-          if options.proxy
-            flags["proxy-server"] = "#{options.proxy[:host]}:#{options.proxy[:port]}"
-            flags["proxy-bypass-list"] = options.proxy[:bypass] if options.proxy[:bypass]
+          if (proxy = options.proxy)
+            flags["proxy-server"] = "#{proxy[:host]}:#{proxy[:port]}"
+            flags["proxy-bypass-list"] = proxy[:bypass] if proxy[:bypass]
           end
 
           flags
@@ -78,7 +78,7 @@ module Ferrum
         def merge_default(flags, options)
           defaults = except("headless", "disable-gpu") unless options.headless
 
-          defaults ||= DEFAULT_OPTIONS
+          defaults ||= @@default_options
           defaults.merge(flags)
         end
       end

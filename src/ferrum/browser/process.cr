@@ -3,7 +3,6 @@ require "json"
 
 # require "addressable"
 require "./options/base"
-
 require "./options/chrome"
 require "./options/firefox"
 require "./command"
@@ -74,12 +73,10 @@ module Ferrum
 
         @logger = options.logger
         @process_timeout = options.process_timeout
+        # @env = Hash(options.env)
         @env = options.env
 
-        tempfile = File.tempfile("ferrum_user_data_dir_")
-        path = tempfile.path
-        tempfile.delete
-        tmpdir = Dir.mkdir_p(path)
+        tmpdir = Dir.tempdir("ferrum_user_data_dir_")
 
         ObjectSpace.define_finalizer(self, self.class.directory_remover(tmpdir))
         @user_data_dir = tmpdir
@@ -101,6 +98,7 @@ module Ferrum
             ObjectSpace.define_finalizer(self, self.class.process_killer(@xvfb.pid))
           end
 
+          # env = Hash(@xvfb.try &.to_env).merge(@env)
           env = @xvfb.try(&.to_env).try &.merge(@env)
           @pid = ::Process.new(env, *@command.to_a, process_options)
           ObjectSpace.define_finalizer(self, self.class.process_killer(@pid))

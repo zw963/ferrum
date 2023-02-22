@@ -1,6 +1,8 @@
 module Ferrum
   module Utils
     module Platform
+      extend self
+
       def self.name
         {% if flag?(:darwin) %}
           :mac

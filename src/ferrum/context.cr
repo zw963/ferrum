@@ -31,7 +31,7 @@ module Ferrum
     # it makes more sense to get and connect to the needed one only which
     # usually is the last one.
     def windows(pos = nil, size = 1)
-      raise ArgumentError if pos && !POSITION.includes?(pos)
+      raise ArgumentError.new if pos && !POSITION.includes?(pos)
 
       windows = @targets.values.select(&.window?)
       windows = windows.send(pos, size) if pos
@@ -48,7 +48,7 @@ module Ferrum
         browserContextId: @id,
         url: "about:blank")
       target = @pendings.take(@browser.timeout)
-      raise NoSuchTargetError unless target.is_a?(Target)
+      raise NoSuchTargetError.new unless target.is_a?(Target)
 
       @targets.put_if_absent(target.id, target)
       target

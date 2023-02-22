@@ -75,7 +75,7 @@ module Ferrum
         data = capture_screenshot(options, opts[:full], opts[:background_color])
         return data if encoding == :base64
 
-        bin = Base64.decode64(data)
+        bin = Base64.decode(data)
         save_file(path, bin)
       end
 

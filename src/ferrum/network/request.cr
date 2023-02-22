@@ -1,5 +1,3 @@
-require "time"
-
 module Ferrum
   class Network
     #
@@ -108,7 +106,7 @@ module Ferrum
       # @return [Time]
       #
       def time
-        @time ||= Time.strptime(@params["wallTime"].to_s, "%s")
+        @time ||= Time.parse_local(@params["wallTime"].to_s, "%s")
       end
 
       #

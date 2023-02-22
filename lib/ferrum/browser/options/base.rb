@@ -21,6 +21,7 @@ module Ferrum
         end
 
         def detect_path
+          pry!
           Binary.find(self.class::PLATFORM_PATH[Utils::Platform.name])
         end
 
