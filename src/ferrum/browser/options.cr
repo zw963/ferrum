@@ -17,64 +17,44 @@ module Ferrum
         :url, :env, :process_timeout, :browser_name, :browser_path,
         :save_path, :extensions, :proxy, :port, :host, :headless,
         :ignore_default_browser_options, :browser_options, :xvfb
-      @port : String
-      @host : String
-      @timeout : Int32
-      @window_size : Tuple(Int32, Int32)
-      @js_errors : Bool
-      @headless : Bool
-      @pending_connection_errors : Bool
-      @process_timeout : Int32
-      @browser_options : Hash(String, String?)
-      @slowmo : Float64?
-      @ws_max_receive_size : Int32?
-      @env : Hash(String, String)?
-      @proxy : Hash(String, String)?
-      @logger : Log?
-      @browser_name : String?
-      @browser_path : String?
-      @save_path : String?
-      @extensions : Array(String)?
-      @ignore_default_browser_options : Bool?
-      @xvfb : Xvfb?
+
       @base_url : URI?
       @url : String?
 
-      def initialize(options = {} of Symbol => Log | Xvfb | Bool | String | Float64 | Int32 | Array(String) | Hash(String, String) | Tuple(Int32, Int32))
-        @options = options.dup
-        @port = @options.fetch(:port, BROWSER_PORT).as(String)
-        @host = @options.fetch(:host, BROWSER_HOST).as(String)
-        @timeout = @options.fetch(:timeout, DEFAULT_TIMEOUT).as(Int32)
-        @window_size = @options.fetch(:window_size, WINDOW_SIZE).as(Tuple(Int32, Int32))
-        @js_errors = @options.fetch(:js_errors, false).as(Bool)
-        @headless = @options.fetch(:headless, HEADLESS).as(Bool)
-        @pending_connection_errors = @options.fetch(:pending_connection_errors, true).as(Bool)
-        @process_timeout = @options.fetch(:process_timeout, PROCESS_TIMEOUT).as(Int32)
-        @browser_options = @options.fetch(:browser_options, {} of String => String?).as(Hash(String, String?))
-        @slowmo = @options[:slowmo]?.try &.as(Float64)
+      def initialize(@options = BrowserBaseOption.new)
+        # options.dup 会造成类型不一样吗？
+        # @options = options.dup
+        @port = @options.port || BROWSER_PORT
+        @host = @options.host || BROWSER_HOST
+        @timeout = @options.timeout || DEFAULT_TIMEOUT
+        @window_size = @options.window_size || WINDOW_SIZE
+        @js_errors = @options.js_errors || false
+        @headless = @options.headless || HEADLESS
+        @pending_connection_errors = @options.pending_connection_errors || true
+        @process_timeout = @options.process_timeout || PROCESS_TIMEOUT
+        @browser_options = @options.browser_options || {} of String => String?
+        @slowmo = @options.slowmo
 
-        @ws_max_receive_size = @options[:ws_max_receive_size]?.try &.as(Int32)
-        @env = @options[:env]?.try &.as(Hash(String, String))
-        @browser_name = @options[:browser_name]?.try &.as(String)
-        @browser_path = @options[:browser_path]?.try &.as(String)
-        @save_path = @options[:save_path]?.try &.as(String)
-        @extensions = @options[:extensions]?.try &.as(Array(String))
-        @ignore_default_browser_options = @options[:ignore_default_browser_options]?.try &.as(Bool)
-        @xvfb = @options[:xfb]?.try &.as(Xvfb)
+        @ws_max_receive_size = @options.ws_max_receive_size
+        @env = @options.env
+        @browser_name = @options.browser_name
+        @browser_path = @options.browser_path
+        @save_path = @options.save_path
+        @extensions = @options.extensions
+        @ignore_default_browser_options = @options.ignore_default_browser_options
+        @xvfb = @options.xvfb
 
-        # @ws_max_receive_size, @env, @browser_name, @browser_path, @save_path, @extensions, @ignore_default_browser_options, @xvfb = @options.values_at(
-        #   :ws_max_receive_size, :env, :browser_name, :browser_path, :save_path, :extensions,
-        #   :ignore_default_browser_options, :xvfb
-        # )
+        @options.window_size = @window_size
+        @proxy = parse_proxy(@options.proxy).as(Hash(String, String)?)
+        @logger = @options.logger
 
-        @options[:window_size] = @window_size
-        @proxy = parse_proxy(@options[:proxy]?).as(Hash(String, String)?)
-        @logger = @options[:logger]?.try &.as(Log)
-        @base_url = parse_base_url(@options[:base_url].as(String)) if @options[:base_url]?
-        @url = @options[:url].as(String) if @options[:url]?
+        if (base_url = @options.base_url)
+          @base_url = parse_base_url(base_url)
+        end
 
-        @options
-        @browser_options
+        if (url = @options.url)
+          @url = url
+        end
       end
 
       def to_h

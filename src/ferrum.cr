@@ -5,6 +5,7 @@ class BlackHole
 end
 
 require "./core/**"
+require "./ferrum/types"
 require "./ferrum/utils/platform"
 require "./ferrum/utils/attempt"
 require "./ferrum/errors"
